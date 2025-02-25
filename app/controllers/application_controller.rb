@@ -8,8 +8,11 @@ class ApplicationController < ActionController::Base
         header = request.headers['Authorization']
         token = header.split(' ').last if header
         decoded_token = JsonWebToken.decode(token)
-
-        User.find(decoded_token[:user_id])
+        
+        # Set the current_user instance variable
+        @current_user = User.find(decoded_token[:user_id])
+    rescue ActiveRecord::RecordNotFound
+        render json: { error: 'User not found' }, status: :unauthorized
     end
 
     def invalid_token
