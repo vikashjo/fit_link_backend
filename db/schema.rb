@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_25_080235) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_27_075446) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +33,30 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_25_080235) do
     t.string "secondary_muscles", default: [], array: true
     t.index ["muscle_group_id"], name: "index_exercises_on_muscle_group_id"
     t.index ["primary_muscle_id"], name: "index_exercises_on_primary_muscle_id"
+  end
+
+  create_table "food_items", force: :cascade do |t|
+    t.bigint "meal_id", null: false
+    t.string "name", null: false
+    t.decimal "quantity", precision: 10, scale: 2, null: false
+    t.string "unit", null: false
+    t.decimal "calories", precision: 10, scale: 2
+    t.decimal "protein", precision: 10, scale: 2
+    t.decimal "carbs", precision: 10, scale: 2
+    t.decimal "fats", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "servings", default: 1
+    t.index ["meal_id"], name: "index_food_items_on_meal_id"
+  end
+
+  create_table "meals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.datetime "meal_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_meals_on_user_id"
   end
 
   create_table "muscle_groups", force: :cascade do |t|
@@ -110,6 +134,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_25_080235) do
   add_foreign_key "exercise_muscles", "muscles"
   add_foreign_key "exercises", "muscle_groups"
   add_foreign_key "exercises", "muscles", column: "primary_muscle_id"
+  add_foreign_key "food_items", "meals"
+  add_foreign_key "meals", "users"
   add_foreign_key "muscles", "muscle_groups"
   add_foreign_key "setts", "exercises"
   add_foreign_key "setts", "workouts"
