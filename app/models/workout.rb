@@ -4,7 +4,6 @@ class Workout < ApplicationRecord
   has_many :exercises, through: :setts
 
   validates :date, presence: true
-  validates :name, presence: true, length: { maximum: 100 }
   validate :date_cannot_be_in_future
 
   private

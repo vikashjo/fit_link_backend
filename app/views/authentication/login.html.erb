@@ -1,0 +1,68 @@
+<h1>Login</h1>
+
+<%= form_with(url: login_path, local: true, id: 'loginForm') do |form| %>
+  <div>
+    <%= form.label :email %>
+    <%= form.email_field :email, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :password %>
+    <%= form.password_field :password, required: true %>
+  </div>
+
+  <div>
+    <%= form.submit "Login" %>
+  </div>
+<% end %>
+
+<script>
+document.getElementById('loginForm').onsubmit = function(event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  const formData = new FormData(this);
+  const email = formData.get('email');
+  const password = formData.get('password');
+
+  fetch('<%= login_path %>', {
+    method: 'POST',
+    headers: {
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email: email, password: password })
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Login failed');
+    }
+  })
+  .then(data => {
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+      
+      // Fetch workout plans instead of redirecting
+      fetch('/workout_plans', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${data.token}`,
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(workouts => {
+        console.log('Workout Plans:', workouts);
+        // Render the workout plans here instead of navigating
+      })
+      .catch(error => console.error('Workout Fetch Error:', error));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Login failed. Please check your credentials.');
+  });
+};
+
+</script> 

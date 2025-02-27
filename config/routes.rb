@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  root "authentication#login"
   post 'login', to: 'authentication#login'
   post 'register', to: 'users#create'
   get 'profile', to: 'users#show'
@@ -20,7 +21,7 @@ Rails.application.routes.draw do
     end
     resources :workout_plan_exercises, only: [:create, :update, :destroy]
   end
-  resources :workouts do
-    resources :setts
-  end
+  resources :workouts
+  resources :setts
+
 end

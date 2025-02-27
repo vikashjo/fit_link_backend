@@ -1,4 +1,16 @@
 class WorkoutsController < ApplicationController
+
+  def index
+    workouts = @current_user.workouts.includes(sets: :exercise)
+    render json: workouts, include: { sets: { include: :exercise } }
+  end
+
+  # Fetch a single workout with exercises and sets
+  def show
+    workout = @current_user.workouts.includes(sets: :exercise).find(params[:id])
+    render json: workout, include: { sets: { include: :exercise } }
+  end
+  
   def create
     @workout = @current_user.workouts.build(workout_params)
     

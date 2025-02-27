@@ -7,4 +7,5 @@ class User < ApplicationRecord
 
     has_many :workouts, dependent: :destroy
     has_many :workout_plans
+    has_many :meals
 end

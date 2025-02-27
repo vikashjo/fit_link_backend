@@ -1,5 +1,10 @@
 class WorkoutPlansController < ApplicationController
   def index
+    if @current_user.nil?
+      render json: { error: 'User not authenticated' }, status: :unauthorized
+      return
+    end
+
     @workout_plans = if params[:templates]
       WorkoutPlan.templates
     else
@@ -10,7 +15,6 @@ class WorkoutPlansController < ApplicationController
   end
 
   def create
-    byebug
     @workout_plan = @current_user.workout_plans.build(workout_plan_params)
     
     if @workout_plan.save

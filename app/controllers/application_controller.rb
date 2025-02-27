@@ -7,12 +7,19 @@ class ApplicationController < ActionController::Base
     def authenticate
         header = request.headers['Authorization']
         token = header.split(' ').last if header
-        decoded_token = JsonWebToken.decode(token)
+        puts "Token: #{token}" # Debugging line to check the token
+        decoded_token = JsonWebToken.decode(token) if token
         
-        # Set the current_user instance variable
-        @current_user = User.find(decoded_token[:user_id])
+        if decoded_token
+            puts "Decoded Token: #{decoded_token}" # Debugging line to check the decoded token
+            @current_user = User.find(decoded_token[:user_id]) if decoded_token[:user_id]
+        else
+            puts "No decoded token" # Debugging line
+        end
     rescue ActiveRecord::RecordNotFound
         render json: { error: 'User not found' }, status: :unauthorized
+    rescue JWT::DecodeError, JWT::ExpiredSignature
+        render json: { error: 'Invalid token' }, status: :unauthorized
     end
 
     def invalid_token
