@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_27_075446) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_01_071245) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_27_075446) do
     t.datetime "updated_at", null: false
     t.integer "servings", default: 1
     t.index ["meal_id"], name: "index_food_items_on_meal_id"
+  end
+
+  create_table "macro_goals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "calories", null: false
+    t.integer "protein", null: false
+    t.integer "carbs", null: false
+    t.integer "fats", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_macro_goals_on_user_id"
   end
 
   create_table "meals", force: :cascade do |t|
@@ -95,6 +106,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_27_075446) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
+    t.integer "age", default: 18, null: false
+    t.string "gender"
+    t.string "activity_level"
   end
 
   create_table "workout_plan_exercises", force: :cascade do |t|
@@ -135,6 +149,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_27_075446) do
   add_foreign_key "exercises", "muscle_groups"
   add_foreign_key "exercises", "muscles", column: "primary_muscle_id"
   add_foreign_key "food_items", "meals"
+  add_foreign_key "macro_goals", "users"
   add_foreign_key "meals", "users"
   add_foreign_key "muscles", "muscle_groups"
   add_foreign_key "setts", "exercises"

@@ -23,5 +23,11 @@ Rails.application.routes.draw do
   end
   resources :workouts
   resources :setts
+  resource :macro_goal, only: [:show, :create, :update] do
+    get 'daily_progress', to: 'macro_goals#daily_progress'
+  end
+  resources :meals do
+    resources :food_items, only: [:index, :create, :update, :destroy]
+  end
 
 end
