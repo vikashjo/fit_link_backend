@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'food_entries/create'
+  get 'food_entries/destory'
+  get 'meal_types/index'
+  get 'meal_types/create'
+  get 'meal_types/update'
+  get 'meal_types/destroy'
   get 'setts/index'
   get 'setts/create'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -26,8 +32,10 @@ Rails.application.routes.draw do
   resource :macro_goal, only: [:show, :create, :update] do
     get 'daily_progress', to: 'macro_goals#daily_progress'
   end
+  resources :meal_types
   resources :meals do
-    resources :food_items, only: [:index, :create, :update, :destroy]
+    resources :food_entries, only: [:create, :destroy]
   end
+  resources :food_items, only: [:index, :create, :update, :destroy]
 
 end

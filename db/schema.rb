@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_01_071245) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_04_072149) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,19 +35,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_01_071245) do
     t.index ["primary_muscle_id"], name: "index_exercises_on_primary_muscle_id"
   end
 
-  create_table "food_items", force: :cascade do |t|
-    t.bigint "meal_id", null: false
-    t.string "name", null: false
-    t.decimal "quantity", precision: 10, scale: 2, null: false
+  create_table "food_entries", force: :cascade do |t|
+    t.integer "quantity", null: false
+    t.bigint "food_item_id", null: false
     t.string "unit", null: false
+    t.integer "servings", default: 1
+    t.bigint "meal_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["food_item_id"], name: "index_food_entries_on_food_item_id"
+    t.index ["meal_id"], name: "index_food_entries_on_meal_id"
+  end
+
+  create_table "food_items", force: :cascade do |t|
+    t.string "name", null: false
     t.decimal "calories", precision: 10, scale: 2
     t.decimal "protein", precision: 10, scale: 2
     t.decimal "carbs", precision: 10, scale: 2
     t.decimal "fats", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "servings", default: 1
-    t.index ["meal_id"], name: "index_food_items_on_meal_id"
   end
 
   create_table "macro_goals", force: :cascade do |t|
@@ -61,12 +68,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_01_071245) do
     t.index ["user_id"], name: "index_macro_goals_on_user_id"
   end
 
+  create_table "meal_types", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "default_time"
+    t.boolean "main_meal"
+    t.jsonb "recommended_macros", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "meals", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "name"
     t.datetime "meal_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "meal_type_id", null: false
+    t.index ["meal_type_id"], name: "index_meals_on_meal_type_id"
     t.index ["user_id"], name: "index_meals_on_user_id"
   end
 
@@ -148,8 +166,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_01_071245) do
   add_foreign_key "exercise_muscles", "muscles"
   add_foreign_key "exercises", "muscle_groups"
   add_foreign_key "exercises", "muscles", column: "primary_muscle_id"
-  add_foreign_key "food_items", "meals"
+  add_foreign_key "food_entries", "food_items"
+  add_foreign_key "food_entries", "meals"
   add_foreign_key "macro_goals", "users"
+  add_foreign_key "meals", "meal_types"
   add_foreign_key "meals", "users"
   add_foreign_key "muscles", "muscle_groups"
   add_foreign_key "setts", "exercises"

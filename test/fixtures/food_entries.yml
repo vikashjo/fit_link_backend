@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quantity: 1
+  food_item: one
+  unit: MyString
+  servings: 1
+  meal: one
+
+two:
+  quantity: 1
+  food_item: two
+  unit: MyString
+  servings: 1
+  meal: two

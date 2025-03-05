@@ -1,8 +1,8 @@
 class FoodItemsController < ApplicationController
-    before_action :set_meal
+    before_action :set_food_item, only: [:update, :destroy]
 
     def index
-        food_items = @meal.food_items
+        food_items = FoodItem.all
         if food_items
             render json: food_items
         else
@@ -12,7 +12,7 @@ class FoodItemsController < ApplicationController
     end
 
     def create
-        food_item = @meal.food_items.build(food_item_params)
+        food_item = FoodItem.create(food_item_params)
         if food_item.save
             render json: food_item, status: :created
         else
@@ -32,15 +32,11 @@ class FoodItemsController < ApplicationController
     private
 
     def set_food_item
-        @food_item = @meal.food_items.find_by(id: params[:id])
+        @food_item = FoodItem.find_by(id: params[:id])
         render json: { error: "Food item not found" }, status: :not_found unless @food_item
     end
 
-    def set_meal
-        @meal = @current_user.meals.find_by(id: params[:meal_id])
-    end
-
     def food_item_params
-        params.require(:food_item).permit(:name, :quantity, :unit, :servings, :calories, :protein, :carbs, :fats)
+        params.require(:food_item).permit(:name, :calories, :protein, :carbs, :fats)
     end
 end
