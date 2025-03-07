@@ -70,3 +70,9 @@ group :test do
 end
 gem 'jwt'
 gem "bcrypt"
+
+gem "dotenv-rails", "~> 3.1"
+
+gem 'ruby-openai', '~> 7.1'
+gem "faraday"
+gem "json"

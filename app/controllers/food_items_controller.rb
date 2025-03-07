@@ -12,11 +12,25 @@ class FoodItemsController < ApplicationController
     end
 
     def create
-        food_item = FoodItem.create(food_item_params)
-        if food_item.save
-            render json: food_item, status: :created
+        # food_item = FoodItem.create(food_item_params)
+        # if food_item.save
+        #     render json: food_item, status: :created
+        # else
+        #     render josn: { errors: food_item.errors.full_messages }, status: :unprocessable_entity
+        # end
+
+        # new_params = params.require(:food_item).permit(:name)
+
+        # macros = AiFoodRecognitionService.get_macros(new_params[:name])
+
+        food_name = params[:food_item][:name]
+        macros = DeepSeekAPI.get_macros(food_name)
+
+        if macros[:error]
+            render json: { error: macros[:error] }, status: :unprocessable_entity
         else
-            render josn: { errors: food_item.errors.full_messages }, status: :unprocessable_entity
+            food_item = FoodItem.create(name: food_name, **macros)
+            render json: food_item, status: :created
         end
     end
 
