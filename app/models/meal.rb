@@ -3,6 +3,7 @@ class Meal < ApplicationRecord
   has_many :food_entries, dependent: :destroy
   has_many :food_items , through: :food_entries
   belongs_to :meal_type
+  accepts_nested_attributes_for :food_entries
 
   def total_macros
     {

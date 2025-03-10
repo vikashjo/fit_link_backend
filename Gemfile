@@ -76,3 +76,4 @@ gem "dotenv-rails", "~> 3.1"
 gem 'ruby-openai', '~> 7.1'
 gem "faraday"
 gem "json"
+gem 'rack-cors'

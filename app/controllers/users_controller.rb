@@ -13,8 +13,8 @@ class UsersController < ApplicationController
     end
 
     def show
-        user = User.find(params[:id])
-        render json: { user: user.slice(:id, :name, :email, :weight, :height) }, status: :ok
+        @user = @current_user
+        render json: @user
     end
 
     private

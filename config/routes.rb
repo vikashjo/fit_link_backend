@@ -34,6 +34,9 @@ Rails.application.routes.draw do
   end
   resources :meal_types
   resources :meals do
+    collection do
+      get :macro_trends
+    end
     resources :food_entries, only: [:create, :destroy]
   end
   resources :food_items, only: [:index, :create, :update, :destroy]
