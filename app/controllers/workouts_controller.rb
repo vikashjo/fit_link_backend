@@ -15,8 +15,14 @@ class WorkoutsController < ApplicationController
     @workout = @current_user.workouts.build(workout_params)
     
     if params[:workout_plan_id].present?
-      workout_plan = WorkoutPlan.find(params[:workout_plan_id])
-      copy_exercises_from_plan(workout_plan)
+      workout_plan = WorkoutPlan.find_by(params[:workout_plan_id])
+
+      if workout_plan
+        copy_exercises_from_plan(workout_plan)
+      else
+        render json: { error: 'Workout plan not found' }, status: :not_found
+        return
+      end
     end
     
     if @workout.save

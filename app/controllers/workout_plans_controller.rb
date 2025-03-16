@@ -44,12 +44,16 @@ class WorkoutPlansController < ApplicationController
     if @workout_plan.save
       # Clone the exercises from template
       template.workout_plan_exercises.each do |template_exercise|
-        @workout_plan.workout_plan_exercises.create!(
+        new_exercise = @workout_plan.workout_plan_exercises.build(
           exercise: template_exercise.exercise,
           recommended_sets: template_exercise.recommended_sets,
           recommended_reps: template_exercise.recommended_reps,
           notes: template_exercise.notes
         )
+        unless new_exercise.save
+          render json: { errors: new_exercise.errors.full_messages },status: :unprocessable_entity
+          return
+        end
       end
       render json: @workout_plan, status: :created
     else

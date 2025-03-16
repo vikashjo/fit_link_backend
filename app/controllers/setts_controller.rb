@@ -12,7 +12,6 @@ class SettsController < ApplicationController
   end
 
   def create
-    byebug
     @sett  = @current_user.setts.new(sett_params)
     if @sett.save
       render json: @sett, status: :created
